@@ -18,7 +18,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 import { createApp } from 'vue';
 import App from './components/pages/App.vue';
 import Login from './components/pages/Login.vue';
-import Home from './components/pages/Home.vue';
+import Home from './components/pages/home/Home.vue';
 
 const routes = [
   { path: '/', component: Home },

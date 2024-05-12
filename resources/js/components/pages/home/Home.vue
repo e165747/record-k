@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import { useHomeParam } from '@/composables/pages/home/useHomeParam'
 import { useLogout } from '@/composables/pages/share/useLogout';
+import { onMounted } from 'vue'
 
-const { records } = useHomeParam()
+const { records, mounted } = useHomeParam()
 const { logout } = useLogout()
+
+onMounted(async () => {
+  await mounted()
+})
 </script>
 
 <template>

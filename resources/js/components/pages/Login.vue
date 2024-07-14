@@ -19,6 +19,9 @@
       class="pa-4 pt-6"
       @submit.prevent="login"
     >
+      <v-alert v-if="error" title="Error" type="error" prominent dismissible  @click.native="error = false" icon="mdi-alert-octagon">
+        {{ errorMessage }}
+      </v-alert>
       <v-text-field
         v-model="username"
         :rules="[rules.email]"
@@ -36,8 +39,11 @@
         type="password"
         variant="filled"
       ></v-text-field>
-      <v-btn @click="clear">Clear</v-btn>
-      <v-btn :disabled="!isValid" type="submit">Login</v-btn>
+      <v-card-actions>
+        <v-btn @click="clear">Clear</v-btn>
+        <v-spacer></v-spacer>
+        <v-btn color="primary" :disabled="!isValid" type="submit">Login</v-btn>
+      </v-card-actions>
       </v-form>
   </v-card>
 </template>
@@ -50,6 +56,8 @@ const {
   form,
   username,
   password,
+  error,
+  errorMessage,
   login,
   isValid,
   mounted,

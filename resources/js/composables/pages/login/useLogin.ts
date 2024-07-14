@@ -6,6 +6,8 @@ export const useLogin = () => {
   const form = ref(null)
   const username: Ref<string> = ref("")
   const password: Ref<string> = ref("")
+  const error: Ref<boolean> = ref(false)
+  const errorMessage: Ref<string> = ref("")
   // バリデーションの結果が通ったか判定
   const isValid = ref(false)
   interface ValidationRules {
@@ -32,8 +34,11 @@ export const useLogin = () => {
       })
       // ログイン成功後にHome画面に遷移
       router.push('/')
-    } catch (error: any) {
-      throw new Error(error.message)
+    } catch (e: any) {
+      console.log('aaaa')
+      error.value = true
+      console.log(e)
+      errorMessage.value = e.response.data.error
     }
   }
 
@@ -61,6 +66,8 @@ export const useLogin = () => {
     form,
     username,
     password,
+    error,
+    errorMessage,
     login,
     isValid,
     rules,

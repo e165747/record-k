@@ -37,6 +37,10 @@ final class LoginController extends Controller
       ]);
     }
 
-    throw new AuthenticationException();
+    // 認証が失敗した場合、カスタムエラーメッセージを含むJsonResponseを返す
+    return new JsonResponse([
+      // エラーメッセージを設定
+      'error' => 'The username or password is incorrect.',
+    ], 401); // HTTPステータスコード401を設定
   }
 }

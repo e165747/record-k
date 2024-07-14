@@ -2,6 +2,7 @@ import '../css/style.scss'
 import _ from 'lodash'
 import { createWebHistory, createRouter } from 'vue-router'
 import vuetify from '../../plugins/vuetify'
+import '@mdi/font/css/materialdesignicons.min.css'
 
 declare global {
   interface Window { _: typeof _ }

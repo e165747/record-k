@@ -5,8 +5,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <title>Laravel Vite React</title>
-  @vite(['resources/css/app.css', 'resources/js/main.ts'])
+  <title>Reco Log</title>
+  @vite(['resources/css/style.scss', 'resources/js/main.ts'])
 </head>
 
 <body>

@@ -1,24 +1,25 @@
-import 'bootstrap/dist/css/bootstrap.css'
-import _ from 'lodash';
-import { createMemoryHistory, createWebHistory, createRouter } from 'vue-router'
+import '../css/style.scss'
+import _ from 'lodash'
+import { createWebHistory, createRouter } from 'vue-router'
+import vuetify from '../../plugins/vuetify'
 
 declare global {
-  interface Window { _: typeof _; }
+  interface Window { _: typeof _ }
 }
-window._ = _;
+window._ = _
 
-import axios from 'axios';
+import axios from 'axios'
 declare global {
-  interface Window { axios: typeof axios; }
+  interface Window { axios: typeof axios }
 }
-window.axios = axios;
+window.axios = axios
 
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 
-import { createApp } from 'vue';
-import App from './components/pages/App.vue';
-import Login from './components/pages/Login.vue';
-import Home from './components/pages/home/Home.vue';
+import { createApp } from 'vue'
+import App from './components/pages/App.vue'
+import Login from './components/pages/Login.vue'
+import Home from './components/pages/home/Home.vue'
 
 const routes = [
   { path: '/', component: Home },
@@ -31,11 +32,13 @@ const router = createRouter({
   routes,
 })
 
-const app = createApp(App).use(router);
+const app = createApp(App)
+  .use(router)
+  .use(vuetify) // Vuetify を使用するように追加
+
 // 本当は↑だが，一旦ログイン画面にしておく
-// const app = createApp(Login).use(router);
-// app.component('component-name', Component); // Replace 'component-name' with the desired name for your component and Component with the actual component you want to register
+// const app = createApp(Login).use(router).use(vuetify)
 
-console.log(app.version);
+console.log(app.version)
 
-app.mount('#app');
+app.mount('#app')

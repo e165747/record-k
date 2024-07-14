@@ -4,7 +4,6 @@ import { useLogout } from '@/composables/pages/share/useLogout';
 import { onMounted } from 'vue'
 
 const { records, mounted } = useHomeParam()
-const { logout } = useLogout()
 
 onMounted(async () => {
   await mounted()
@@ -12,8 +11,6 @@ onMounted(async () => {
 </script>
 
 <template>
-  <h1 class="text-primary">Hello World</h1>
-  <button @click="logout">Logout</button>
   <div class="container">
     <div class="row">
       <div class="col-sm-12 col-md-4" v-for="record in records" :key="record.id">

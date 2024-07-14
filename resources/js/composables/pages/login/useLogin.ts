@@ -1,10 +1,27 @@
-import axios from "axios";
-import { Ref, ref } from "vue";
+import axios from "axios"
+import { Ref, ref } from "vue"
 import { useRouter } from 'vue-router'
 
 export const useLogin = () => {
-  const username: Ref<string> = ref("");
-  const password: Ref<string> = ref("");
+  const form = ref(null)
+  const username: Ref<string> = ref("")
+  const password: Ref<string> = ref("")
+  // バリデーションの結果が通ったか判定
+  const isValid = ref(false)
+  interface ValidationRules {
+    email: (v: string) => boolean | string
+    length: (len: number) => (v: string) => boolean | string
+    // password: (v: string) => boolean | string
+    required: (v: string) => boolean | string
+  }
+  const rules: Ref<ValidationRules> = ref({
+    email: v => !!(v || '').match(/@/) || 'Please enter a valid email',
+    length: len => v => (v || '').length >= len || `Invalid character length, required ${len}`,
+    // パスワードルールは適当なのでとりあえずコメントアウト
+    // password: v => !!(v || '').match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/) ||
+    //   'Password must contain an upper case letter, a numeric character, and a special character',
+    required: v => !!v || 'This field is required',
+  })
   const router = useRouter()
   const login = async () => {
     try {
@@ -12,33 +29,42 @@ export const useLogin = () => {
       await axios.post("/login", {
         email: username.value,
         password: password.value,
-      });
+      })
       // ログイン成功後にHome画面に遷移
       router.push('/')
     } catch (error: any) {
-      throw new Error(error.message);
+      throw new Error(error.message)
     }
-  };
+  }
 
   const mounted = async () => {
     try {
-      const csrfResponse = await axios.get("/sanctum/csrf-cookie");
+      const csrfResponse = await axios.get("/sanctum/csrf-cookie")
       //ここでログイン済みか判定し，Homeに飛ばす
       if (csrfResponse.status === 204) {
-        const userResponse = await axios.get("/api/me");
+        const userResponse = await axios.get("/api/me")
         if (userResponse.data) {
           router.push('/')
         }
       }
     } catch (error: any) {
-      throw new Error(error.message);
+      throw new Error(error.message)
     }
   }
 
+  const clear = () => {
+    username.value = ""
+    password.value = ""
+  }
+
   return {
+    form,
     username,
     password,
     login,
-    mounted
-  };
-};
+    isValid,
+    rules,
+    mounted,
+    clear
+  }
+}

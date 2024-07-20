@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import Appbar from '@/components/organisms/Appbar.vue'
+import Appbar from '@/components/organisms/common/Appbar.vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()

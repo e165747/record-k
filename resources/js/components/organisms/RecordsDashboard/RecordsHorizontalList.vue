@@ -1,3 +1,4 @@
+<!-- 横に広く表示 -->
 <script setup lang="ts">
 import { Record } from '@/types/pages/home'
 const props = defineProps<{

@@ -1,3 +1,4 @@
+<!-- 縦に並べて情報量を多く -->
 <script setup lang="ts">
 import { Record } from '@/types/pages/home'
 const props = defineProps<{

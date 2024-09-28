@@ -5,4 +5,5 @@ export type Record = {
   imagePath: string;
   //評価
   evaluation: number;
+  description: string;
 }

@@ -6,7 +6,7 @@ import RecordsVerticalList from '@/components/organisms/RecordsDashboard/Records
 import LayoutSwitcher from '@/components/molecules/LayoutSwitcher.vue';
 import { useLayoutSwitch } from '@/composables/pages/share/useLayoutSwitch';
 
-const { records, mounted } = useHomeParam()
+const { records, mounted, update } = useHomeParam()
 const { horizontal, changeHorizontal, changeVertical } = useLayoutSwitch()
 
 onMounted(async () => {
@@ -19,7 +19,7 @@ onMounted(async () => {
     <v-container :style="{ display: 'flex', justifyContent: 'flex-end' }">
       <LayoutSwitcher :horizontal="horizontal" @change-horizontal="changeHorizontal" @change-vertical="changeVertical" />
     </v-container>
-    <RecordsDashboardHorizontalList v-if="horizontal" :records="records" />
-    <RecordsVerticalList v-if="!horizontal" :records="records" />
+    <RecordsDashboardHorizontalList v-if="horizontal" :records="records" @update="update"/>
+    <RecordsVerticalList v-if="!horizontal" :records="records" @update="update"/>
   </v-container>
 </template>

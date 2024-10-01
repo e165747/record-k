@@ -21,7 +21,15 @@ const props = withDefaults(
     // halfIcon: 'mdi-record-circle-half'
   }
 )
+const emit = defineEmits(['update:modelValue'])
 
+function handleRatingChange(newRating: string | number) {
+  // newRatingがstringの場合は数値に変換
+  if (typeof newRating === 'string') {
+    newRating = parseInt(newRating)
+  }
+  emit('update:modelValue', newRating)
+}
 </script>
 <template>
   <v-rating
@@ -37,6 +45,7 @@ const props = withDefaults(
     :empty-icon="props.emptyIcon"
     :full-icon="props.fullIcon"
     :half-icon="props.halfIcon"
+    @update:model-value="handleRatingChange"
   />
   <div v-else>
     <v-icon :color="props.color">{{ props.fullIcon }}</v-icon>

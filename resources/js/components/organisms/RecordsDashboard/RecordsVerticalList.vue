@@ -5,6 +5,12 @@ import { Record } from '@/types/pages/home'
 const props = defineProps<{
   records: Record[]
 }>()
+const emits = defineEmits(['update'])
+// 更新する
+const handleRatingChange = (record: Record, newRating: number) => {
+  const newRecord = { ...record, evaluation: newRating }
+  emits('update', newRecord)
+}
 
 </script>
 <template>
@@ -23,7 +29,7 @@ const props = defineProps<{
           </div>
           <div class="ml-auto">
             <!-- 自己評価 -->
-            <RatingStar :modelValue="record.evaluation" />
+            <RatingStar :modelValue="record.evaluation" @update:modelValue="(newRating: number) => handleRatingChange(record, newRating)"/>
           </div>
         </v-card>
       </v-col>

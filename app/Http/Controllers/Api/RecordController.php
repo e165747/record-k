@@ -5,9 +5,14 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RecordRequest;
 use App\Models\Record;
+use Illuminate\Support\Facades\Auth;
 
 class RecordController extends Controller
 {
+  public function __construct()
+  {
+    $this->middleware('ensureUserOwnsRecord')->only(['show', 'update', 'destroy']);
+  }
   /**
    * Display a listing of the resource.
    *
@@ -16,7 +21,8 @@ class RecordController extends Controller
   public function index()
   {
     // recordsテーブルのデータを全件取得
-    $records = Record::all();
+    $userId = Auth::id();
+    $records = Record::where('user_id', $userId)->get();
     return response()->json($records);
   }
 
@@ -58,6 +64,7 @@ class RecordController extends Controller
     $record = $request->all();
     // レコードを更新
     Record::find($id)->update($record);
+    return response()->json(['message' => 'Updated successfully']);
   }
 
   /**

@@ -6,4 +6,6 @@ export type Record = {
   //評価
   evaluation: number;
   description: string;
+  isPossession: boolean;
+  memo: string;
 }

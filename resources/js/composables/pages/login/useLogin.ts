@@ -49,7 +49,11 @@ export const useLogin = () => {
       if (csrfResponse.status === 204) {
         const userResponse = await axios.get("/api/me")
         if (userResponse.data) {
-          router.push('/')
+          username.value = userResponse.data.name
+          const currentRoute = router.currentRoute.value.path
+          if (currentRoute === '/login') {
+            router.push('/')
+          }
         }
       }
     } catch (error: any) {

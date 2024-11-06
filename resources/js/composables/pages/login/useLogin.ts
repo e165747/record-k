@@ -35,9 +35,7 @@ export const useLogin = () => {
       // ログイン成功後にHome画面に遷移
       router.push('/')
     } catch (e: any) {
-      console.log('aaaa')
       error.value = true
-      console.log(e)
       errorMessage.value = e.response.data.error
     }
   }

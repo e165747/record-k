@@ -36,9 +36,22 @@ export const useHomeParam = () => {
     getAllRecord()
   }
 
+  const store = async (record: Record) => {
+    await axios.post(constant.store, {
+      record_name: record.name,
+      description: record.description,
+      self_evaluation: record.evaluation,
+      is_possession: record.isPossession,
+      memo: record.memo,
+    })
+    getAllRecord()
+  }
+
   return {
     records,
     mounted,
-    update
+    getAllRecord,
+    update,
+    store,
   }
 }

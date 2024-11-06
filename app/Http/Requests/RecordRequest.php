@@ -26,7 +26,7 @@ class RecordRequest extends FormRequest
     return [
       'record_name' => 'required|string|max:100',
       'record_description' => 'nullable|string|max:255',
-      'is_possession' => 'required|boolean',
+      'is_possession' => 'nullable|boolean',
     ];
   }
 }

@@ -33,12 +33,20 @@ const router = createRouter({
   routes,
 })
 
+// ログインしていない場合はログイン画面にリダイレクト
+axios.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response.status === 401) {
+      router.push('/login')
+    }
+    return Promise.reject(error)
+  }
+)
+
 const app = createApp(App)
   .use(router)
-  .use(vuetify) // Vuetify を使用するように追加
-
-// 本当は↑だが，一旦ログイン画面にしておく
-// const app = createApp(Login).use(router).use(vuetify)
+  .use(vuetify)
 
 console.log(app.version)
 

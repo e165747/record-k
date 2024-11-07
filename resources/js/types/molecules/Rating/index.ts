@@ -1,7 +1,7 @@
 export type Props = {
-  isShowFull: boolean
+  isShowFull?: boolean
   disabled?: boolean
-  length: number
+  length?: number
   size?: number
   modelValue?: number
   color?: string

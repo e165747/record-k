@@ -6,7 +6,7 @@
       <template v-slot="{ isActive }">
       <v-card>
         <v-card-title>
-          <span class="headline">New Record</span>
+          <span class="headline">New Record<v-icon>mdi-record-circle</v-icon></span>
         </v-card-title>
         <v-card-text>
           <!-- フォームやその他のコンテンツをここに追加 -->
@@ -32,7 +32,7 @@
     </v-dialog>
 </template>
 <script setup lang="ts">
-import AddButton from '@/components/atoms/AddButton.vue';
+import AddButton from '@/components/atoms/buttons/AddButton.vue';
 import RatingStar from '@/components/molecules/RatingStar.vue';
 import { Record } from '@/types/pages/home';
 import axios from 'axios';

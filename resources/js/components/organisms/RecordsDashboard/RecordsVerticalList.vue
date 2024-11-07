@@ -1,6 +1,8 @@
 <!-- 縦に並べて情報量を多く -->
 <script setup lang="ts">
 import RatingStar from '@/components/molecules/RatingStar.vue';
+import Delete from '@/components/atoms/buttons/Delete.vue';
+import Detail from '@/components/atoms/buttons/Detail.vue';
 import { Record } from '@/types/pages/home'
 const props = defineProps<{
   records: Record[]
@@ -31,6 +33,10 @@ const handleRatingChange = (record: Record, newRating: number) => {
             <!-- 自己評価 -->
             <RatingStar :modelValue="record.evaluation" @update:modelValue="(newRating: number) => handleRatingChange(record, newRating)"/>
           </div>
+          <v-card-actions>
+            <Detail @detail="() => { }" />
+            <Delete @delete="() => { }" />
+          </v-card-actions>
         </v-card>
       </v-col>
     </v-row>

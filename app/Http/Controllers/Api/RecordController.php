@@ -75,6 +75,7 @@ class RecordController extends Controller
    */
   public function destroy($id)
   {
-    //
+    Record::destroy($id);
+    return response()->json(['message' => 'Deleted successfully']);
   }
 }

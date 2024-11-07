@@ -17,7 +17,7 @@ export const useHomeParam = () => {
       id: record.record_id,
       name: record.record_name,
       imagePath: record.image_path ?? 'https://placehold.jp/150x150.png',
-      evaluation: record.self_evaluation,
+      evaluation: parseFloat(record.self_evaluation),
       description: record.description,
       isPossession: record.is_possession,
       memo: record.memo,

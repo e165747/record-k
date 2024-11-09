@@ -47,6 +47,15 @@ export const useHomeParam = () => {
     getAllRecord()
   }
 
+  const deleteRecord = async (record: Record) => {
+    await axios.delete(constant.delete(record.id))
+    getAllRecord()
+  }
+
+  const getDetail = async (id: number) => {
+    await axios.get(constant.getDetail(id))
+  }
+
   return {
     records,
     mounted,

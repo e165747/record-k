@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AuthorController;
 use App\Http\Controllers\Api\MeController;
 use App\Http\Controllers\Api\RecordController;
 use Illuminate\Http\Request;
@@ -22,4 +23,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group(['middleware' => ['auth:sanctum']], function () {
   Route::get('/me', MeController::class);
   Route::apiResource('/records', RecordController::class);
+  Route::get('/authors/get-authors', [AuthorController::class, 'list']);
+  Route::apiResource('/authors', AuthorController::class);
 });

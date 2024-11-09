@@ -15,13 +15,15 @@ return new class extends Migration
   {
     Schema::create('authors', function (Blueprint $table) {
       $table->id('author_id');
+      // 外部のユーザーID
+      $table->unsignedBigInteger('user_id');
       $table->string('author_name');
       // 自己評価
-      $table->integer('self_evaluation');
+      $table->integer('self_evaluation')->default(3);
       // 画像
-      $table->string('author_image');
+      $table->string('author_image')->nullable();
       // いつからこのアーティストを知ったかを記録(例:2022-01-01)
-      $table->date('know_date');
+      $table->date('know_date')->nullable();
       $table->timestamps();
     });
   }

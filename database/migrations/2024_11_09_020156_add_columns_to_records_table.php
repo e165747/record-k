@@ -29,7 +29,8 @@ return new class extends Migration
   public function down()
   {
     Schema::table('records', function (Blueprint $table) {
-      //
+      $table->dropColumn('author_id');
+      $table->dropColumn('purchase_date');
     });
   }
 };

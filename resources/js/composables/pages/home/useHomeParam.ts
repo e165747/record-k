@@ -1,7 +1,9 @@
 import { Ref, ref } from 'vue'
 import { Record } from '@/types/pages/home'
 import axios from 'axios'
-import { constant } from './constant'
+import { urls } from './constant'
+import { constant } from '@/store/home/constant'
+
 
 export const useHomeParam = () => {
   const records: Ref<Record[]> = ref([
@@ -9,10 +11,16 @@ export const useHomeParam = () => {
 
   const mounted = async () => {
     getAllRecord()
+    getAuthors()
+  }
+
+  const getAuthors = async () => {
+    const response = await axios.get(urls.getAuthors)
+    constant.AUTHOR_LIST = response.data
   }
 
   const getAllRecord = async () => {
-    const response = await axios.get(constant.index)
+    const response = await axios.get(urls.index)
     records.value = response.data.map((record: any) => ({
       id: record.record_id,
       name: record.record_name,
@@ -26,7 +34,7 @@ export const useHomeParam = () => {
 
   // レコードの更新処理
   const update = async (record: Record) => {
-    await axios.put(constant.update(record.id), {
+    await axios.put(urls.update(record.id), {
       record_name: record.name,
       description: record.description,
       self_evaluation: record.evaluation,
@@ -37,7 +45,7 @@ export const useHomeParam = () => {
   }
 
   const store = async (record: Record) => {
-    await axios.post(constant.store, {
+    await axios.post(urls.store, {
       record_name: record.name,
       description: record.description,
       self_evaluation: record.evaluation,
@@ -48,12 +56,12 @@ export const useHomeParam = () => {
   }
 
   const deleteRecord = async (record: Record) => {
-    await axios.delete(constant.delete(record.id))
+    await axios.delete(urls.delete(record.id))
     getAllRecord()
   }
 
   const getDetail = async (id: number) => {
-    await axios.get(constant.getDetail(id))
+    await axios.get(urls.getDetail(id))
   }
 
   return {

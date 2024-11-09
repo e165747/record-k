@@ -1,7 +1,9 @@
 <template>
     <v-dialog>
       <template v-slot:activator="{ props }">
-        <AddButton icon v-bind="props"/>
+        <AddButton icon v-bind="props">
+          <v-icon>mdi-record-circle</v-icon>
+        </AddButton>
       </template>
       <template v-slot="{ isActive }">
       <v-card>
@@ -37,26 +39,30 @@ import RatingStar from '@/components/molecules/RatingStar.vue';
 import { Record } from '@/types/pages/home';
 import axios from 'axios';
 import { ref, Ref } from 'vue'
-import { constant } from '@/composables/pages/home/constant';
+import { urls } from '@/composables/pages/home/constant';
 
 const emit = defineEmits(['after-store'])
 
 const initialRecord: Record = {
   id: 0,
+  authorId: 0,
   name: '',
   description: '',
   evaluation: 0,
   imagePath: '',
   isPossession: false,
+  purchaseDate: '',
   memo: ''
 }
 const record: Ref<Record> = ref({
   id: 0,
+  authorId: 0,
   name: '',
   description: '',
   evaluation: 0,
   imagePath: '',
   isPossession: false,
+  purchaseDate: '',
   memo: ''
 })
 
@@ -66,7 +72,7 @@ const error = ref({
 
 const save = async (isActive: Ref<boolean>) => {
   try {
-    await axios.post(constant.store, {
+    await axios.post(urls.store, {
       record_name: record.value.name,
       description: record.value.description,
       self_evaluation: record.value.evaluation,

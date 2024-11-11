@@ -23,6 +23,7 @@ export const useHomeParam = () => {
     const response = await axios.get(urls.index)
     records.value = response.data.map((record: any) => ({
       id: record.record_id,
+      authorId: record.author_id,
       name: record.record_name,
       imagePath: record.image_path ?? 'https://placehold.jp/150x150.png',
       evaluation: parseFloat(record.self_evaluation),

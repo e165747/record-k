@@ -4,6 +4,7 @@ import RatingStar from '@/components/molecules/RatingStar.vue';
 import Delete from '@/components/atoms/buttons/Delete.vue';
 import Detail from '@/components/atoms/buttons/Detail.vue';
 import { Record } from '@/types/pages/home'
+import { constant } from '@/store/home/constant';
 const props = defineProps<{
   records: Record[]
 }>()
@@ -24,8 +25,9 @@ const handleRatingChange = (record: Record, newRating: number) => {
           <div class="h-100 px-2 d-flex flex-column align-start">
             <!-- レコード名 -->
             {{ record.name }}
-            <!-- メモ -->
+            <!-- 説明 -->
             <div class="text-muted">
+              {{ constant.AUTHOR_LIST[record.authorId] }}
               {{ record.description }}
             </div>
           </div>

@@ -11,3 +11,7 @@ export type Record = {
   memo: string;
   purchaseDate: string;
 }
+
+export interface Constant {
+  AUTHOR_LIST: { [key: number]: string };
+}

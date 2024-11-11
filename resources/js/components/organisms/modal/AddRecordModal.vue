@@ -14,6 +14,17 @@
           <!-- フォームやその他のコンテンツをここに追加 -->
           <v-text-field v-model="record.name" maxlength="100" :errorMessages="error.name" label="レコード名" />
           <v-text-field v-model="record.description" maxlength="200" label="レコードの説明" />
+          <v-autocomplete
+            v-model="record.authorId"
+            :items="authorList"
+            item-title="name"
+            item-value="id"
+            label="アーティスト名"
+            :errorMessages="error.author_id"
+            >
+          </v-autocomplete>
+            {{ authorList }}
+            <!-- :items="Object.values(constant.AUTHOR_LIST)" -->
           <v-checkbox
             v-model="record.isPossession"
             :label="`所持している`"
@@ -38,8 +49,9 @@ import AddButton from '@/components/atoms/buttons/AddButton.vue';
 import RatingStar from '@/components/molecules/RatingStar.vue';
 import { Record } from '@/types/pages/home';
 import axios from 'axios';
-import { ref, Ref } from 'vue'
+import { ref, Ref, computed } from 'vue'
 import { urls } from '@/composables/pages/home/constant';
+import { constant } from '@/store/home/constant';
 
 const emit = defineEmits(['after-store'])
 
@@ -66,14 +78,20 @@ const record: Ref<Record> = ref({
   memo: ''
 })
 
+const authorList = computed(() => {
+  return Object.entries(constant.AUTHOR_LIST).map(([id, name]) => ({ id: Number(id), name }))
+})
+
 const error = ref({
   name: '',
+  author_id: '',
 })
 
 const save = async (isActive: Ref<boolean>) => {
   try {
     await axios.post(urls.store, {
       record_name: record.value.name,
+      author_id: record.value.authorId,
       description: record.value.description,
       self_evaluation: record.value.evaluation,
       is_possession: record.value.isPossession,

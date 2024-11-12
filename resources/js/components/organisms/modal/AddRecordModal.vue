@@ -23,8 +23,6 @@
             :errorMessages="error.author_id"
             >
           </v-autocomplete>
-            {{ authorList }}
-            <!-- :items="Object.values(constant.AUTHOR_LIST)" -->
           <v-checkbox
             v-model="record.isPossession"
             :label="`所持している`"

@@ -3,6 +3,7 @@ import _ from 'lodash'
 import { createWebHistory, createRouter } from 'vue-router'
 import vuetify from '../../plugins/vuetify'
 import '@mdi/font/css/materialdesignicons.min.css'
+import store from './store/share/index'
 
 declare global {
   interface Window { _: typeof _ }
@@ -29,17 +30,27 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(),
-  // history: createMemoryHistory(),
   routes,
 })
 
+// 全てのリクエスト時にstore共通処理を実行
+axios.interceptors.request.use(
+  config => {
+    store.dispatch('loading/startLoading')
+    return config
+  },
+)
 // ログインしていない場合はログイン画面にリダイレクト
 axios.interceptors.response.use(
-  response => response,
+  response => {
+    store.dispatch('loading/endLoading')
+    return response
+  },
   error => {
     if (error.response.status === 401) {
       router.push('/login')
     }
+    store.dispatch('loading/endLoading')
     return Promise.reject(error)
   }
 )
@@ -47,6 +58,7 @@ axios.interceptors.response.use(
 const app = createApp(App)
   .use(router)
   .use(vuetify)
+  .use(store)
 
 console.log(app.version)
 

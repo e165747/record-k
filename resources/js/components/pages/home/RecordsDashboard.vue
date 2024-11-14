@@ -7,7 +7,7 @@ import LayoutSwitcher from '@/components/molecules/LayoutSwitcher.vue';
 import AddRecordModal from '@/components/organisms/modal/AddRecordModal.vue';
 import { useLayoutSwitch } from '@/composables/pages/share/useLayoutSwitch';
 
-const { records, mounted, update, getAllRecord } = useHomeParam()
+const { records, mounted, update, deleteRecord, getAllRecord } = useHomeParam()
 const { horizontal, changeHorizontal, changeVertical } = useLayoutSwitch()
 
 onMounted(async () => {
@@ -21,7 +21,7 @@ onMounted(async () => {
       <div class="mr-2"><AddRecordModal @after-store="getAllRecord"/></div>
       <LayoutSwitcher :horizontal="horizontal" @change-horizontal="changeHorizontal" @change-vertical="changeVertical" />
     </v-container>
-    <RecordsDashboardHorizontalList v-if="horizontal" :records="records" @update="update"/>
-    <RecordsVerticalList v-if="!horizontal" :records="records" @update="update"/>
+    <RecordsDashboardHorizontalList v-if="horizontal" :records="records" @update="update" @delete="deleteRecord"/>
+    <RecordsVerticalList v-if="!horizontal" :records="records" @update="update" @delete="deleteRecord"/>
   </v-container>
 </template>

@@ -25,7 +25,7 @@
       <v-text-field
         v-model="username"
         :rules="[rules.email]"
-        color="grey"
+        color="gray"
         label="User name(email)"
         type="email"
         variant="filled"
@@ -33,7 +33,7 @@
       <v-text-field
         v-model="password"
         :rules="[rules.length(6)]"
-        color="grey"
+        color="gray"
         counter="100"
         label="Password"
         type="password"

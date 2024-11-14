@@ -71,5 +71,6 @@ export const useHomeParam = () => {
     getAllRecord,
     update,
     store,
+    deleteRecord,
   }
 }

@@ -23,6 +23,12 @@ class RecordController extends Controller
     // recordsテーブルのデータを全件取得
     $userId = Auth::id();
     $records = Record::where('user_id', $userId)->get();
+    // 画像のフルURLを生成
+    foreach ($records as $record) {
+      if ($record->image_path) {
+        $record->image_path = asset('storage/jacket/' . $userId . '/' . $record->image_path);
+      }
+    }
     return response()->json($records);
   }
 

@@ -33,7 +33,7 @@ const emits = defineEmits(['delete'])
     <v-row>
       <v-col md="3" v-for="record in props.records" :key="record.id">
         <div class="p-2">
-          <img :src="record.imagePath" />
+          <v-img width="150" :src="record.imagePath" />
           <div >
             <span>{{ record.name }}</span>
             <v-row style="width:150px" justify="space-between" no-gutters>

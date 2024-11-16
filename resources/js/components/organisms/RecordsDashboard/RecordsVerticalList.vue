@@ -39,7 +39,9 @@ const deleteData = ref<Record>({
     <v-row v-for="record in props.records" :key="record.id">
       <v-col cols="12" class="h-100">
         <v-card class="pa-2 d-flex align-center">
-          <img :src="record.imagePath" />
+          <div style="max-height:150px;max-width:150px">
+            <v-img height="150" width="150" :src="record.imagePath" />
+          </div>
           <div class="h-100 px-2 d-flex flex-column align-start">
             <!-- レコード名 -->
             {{ record.name }}

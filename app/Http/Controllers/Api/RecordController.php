@@ -41,9 +41,20 @@ class RecordController extends Controller
   public function store(RecordRequest $request)
   {
     // リクエストデータを取得
-    $record = $request->all();
+    $recordData = $request->except('jacket_img');
+
+    // 画像ファイルがアップロードされているか確認
+    if ($request->hasFile('jacket_img')) {
+      $file = $request->file('jacket_img');
+      $path = 'public/jacket' . '/' . Auth::id();
+      // ファイルを保存し、パスを取得
+      $filePath = $file->store($path);
+      // ファイル名のみをレコードデータに追加
+      $recordData['image_path'] = basename($filePath);
+    }
+
     // レコードを作成
-    Record::create($record);
+    Record::create($recordData);
   }
 
   /**

@@ -21,7 +21,7 @@ onMounted(async () => {
       <div class="mr-2"><AddRecordModal @after-store="getAllRecord"/></div>
       <LayoutSwitcher :horizontal="horizontal" @change-horizontal="changeHorizontal" @change-vertical="changeVertical" />
     </v-container>
-    <RecordsDashboardHorizontalList v-if="horizontal" :records="records" @update="update" @delete="deleteRecord"/>
-    <RecordsVerticalList v-if="!horizontal" :records="records" @update="update" @delete="deleteRecord"/>
+    <RecordsDashboardHorizontalList v-if="horizontal" :records="records" @update="update" @delete="deleteRecord" @reload="getAllRecord"/>
+    <RecordsVerticalList v-if="!horizontal" :records="records" @update="update" @delete="deleteRecord" @reload="getAllRecord"/>
   </v-container>
 </template>

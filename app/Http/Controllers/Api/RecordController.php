@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RecordRequest;
 use App\Models\Record;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class RecordController extends Controller
@@ -78,10 +79,11 @@ class RecordController extends Controller
   public function update(RecordRequest $request, $id)
   {
     // リクエストデータを取得
-    $record = $request->all();
+    $recordData = $request->all();
     // レコードを更新
-    Record::find($id)->update($record);
-    return response()->json(['message' => 'Updated successfully']);
+    $newData = Record::find($id)->update($recordData);
+
+    return response()->json($newData);
   }
 
   /**
@@ -94,5 +96,31 @@ class RecordController extends Controller
   {
     Record::destroy($id);
     return response()->json(['message' => 'Deleted successfully']);
+  }
+
+  /**
+   * レコードの画像を保存または更新
+   * 
+   * @param Request $request
+   * @param int $id
+   * 
+   * @return \Illuminate\Http\Response
+   */
+  public function upsertImage(Request $request, $id)
+  {
+    // リクエストデータを取得
+    $recordData = $request->all();
+    // 画像ファイルがアップロードされているか確認
+    if ($request->hasFile('jacket_img')) {
+      $file = $request->file('jacket_img');
+      $path = 'public/jacket' . '/' . Auth::id();
+      // ファイルを保存し、パスを取得
+      $filePath = $file->store($path);
+      // ファイル名のみをレコードデータに追加
+      $recordData['image_path'] = basename($filePath);
+    }
+    // レコードを更新
+    $newData = Record::find($id)->update($recordData);
+    return response()->json($newData);
   }
 }

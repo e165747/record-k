@@ -8,12 +8,14 @@ import Caution from '../modal/share/Caution.vue';
 import { Record } from '@/types/pages/home'
 import { constant } from '@/store/home/constant';
 import { useDialog } from '@/composables/pages/share/useDialog';
+import EditRecordModal from '../modal/EditRecordModal.vue';
 
 const props = defineProps<{
   records: Record[]
 }>()
-const emits = defineEmits(['update', 'delete'])
-const { dialog, openDialog } = useDialog()
+const emits = defineEmits(['update', 'delete', 'reload'])
+const { dialog: deleteDialog, openDialog: openDelete } = useDialog()
+const { dialog: detailDialog, openDialog: openDetail } = useDialog()
 
 // 更新する
 const handleRatingChange = (record: Record, newRating: number) => {
@@ -21,7 +23,7 @@ const handleRatingChange = (record: Record, newRating: number) => {
   emits('update', newRecord)
 }
 
-const deleteData = ref<Record>({
+const detailData = ref<Record>({
   id: 0,
   name: '',
   authorId: 0,
@@ -56,30 +58,42 @@ const deleteData = ref<Record>({
             <RatingStar :modelValue="record.evaluation" @update:modelValue="(newRating: number) => handleRatingChange(record, newRating)"/>
           </div>
           <v-card-actions>
-            <Detail @detail="() => { }" />
+            <Detail @detail="() => {
+              detailData = record
+              openDetail()
+            }" />
             <Delete @delete="() => {
-              deleteData = record
-              openDialog()
+              detailData = record
+              openDelete()
             }" />
           </v-card-actions>
         </v-card>
       </v-col>
     </v-row>
-    <v-dialog v-model="dialog">
+    <v-dialog key="detail" v-model="detailDialog">
+      <EditRecordModal
+        :data="detailData"
+        @after-store="() => {
+          detailDialog = false
+          emits('reload')
+        }"
+        @close="detailDialog = false"
+      />
+    </v-dialog>
+    <v-dialog key="delete" v-model="deleteDialog">
       <Caution
-        :is-open="dialog"
         :title="'削除確認'"
         :message="'以下の項目を本当に削除しますか？'"
-        @update:isDialogActive="dialog = $event"
-        @execute="() => { emits('delete', deleteData) }"
+        @update:isDialogActive="deleteDialog = $event"
+        @execute="() => { emits('delete', detailData) }"
       >
       <template #content>
         <div>レコード名</div>
-        <h3>{{ deleteData.name }}</h3>
+        <h3>{{ detailData.name }}</h3>
         <div>アーティスト</div>
-        <h3>{{ deleteData.authorId !== undefined ? constant.AUTHOR_LIST[deleteData.authorId] : '' }}</h3>
+        <h3>{{ detailData.authorId !== undefined ? constant.AUTHOR_LIST[detailData.authorId] : '' }}</h3>
         <div>詳細</div>
-        <h3>{{ deleteData.description }}</h3>
+        <h3>{{ detailData.description }}</h3>
       </template>
     </Caution>
     </v-dialog>

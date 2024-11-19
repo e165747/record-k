@@ -24,9 +24,9 @@ class RecordRequest extends FormRequest
   public function rules()
   {
     return [
-      'record_name' => 'required|string|max:100',
-      'record_description' => 'nullable|string|max:255',
-      'is_possession' => 'nullable|boolean',
+      'record_name' => ['required', 'string', 'max:100'],
+      'record_description' => ['nullable', 'string', 'max:255'],
+      'is_possession' => ['nullable', 'boolean'],
     ];
   }
 }

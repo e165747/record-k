@@ -5,4 +5,5 @@ export const urls = {
   delete: (id: number) => `/api/records/${id}`,
   getDetail: (id: number) => `/api/records/${id}`,
   getAuthors: '/api/authors/get-authors',
+  upsertImage: (id: number) => `/api/records/${id}/upsert-image`,
 }

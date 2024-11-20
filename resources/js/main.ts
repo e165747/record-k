@@ -22,10 +22,12 @@ import { createApp } from 'vue'
 import App from './components/pages/App.vue'
 import Login from './components/pages/Login.vue'
 import RecordsDashboard from './components/pages/home/RecordsDashboard.vue'
+import Author from './components/pages/author/Author.vue'
 
 const routes = [
   { path: '/', component: RecordsDashboard },
   { path: '/login', component: Login },
+  { path: '/artists', component: Author },
 ]
 
 const router = createRouter({

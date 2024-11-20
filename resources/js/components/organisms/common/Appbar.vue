@@ -4,6 +4,9 @@
       Reco Log
       <v-icon>mdi-record-circle</v-icon>
     </v-app-bar-title>
+    <!-- レコード一覧に遷移 -->
+    <v-btn to="/">Records</v-btn>
+    <v-btn to="/artists">Artists</v-btn>
     <v-spacer></v-spacer>
     <div class="mr-2">
       ようこそ、{{ props.userName }}さん

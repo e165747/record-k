@@ -18,6 +18,8 @@ onMounted(async () => {
 <template>
   <v-container>
     <v-container :style="{ display: 'flex', justifyContent: 'flex-end' }">
+      <h2 class="mr-2">All Records</h2>
+      <v-spacer></v-spacer>
       <div class="mr-2"><AddRecordModal @after-store="getAllRecord"/></div>
       <LayoutSwitcher :horizontal="horizontal" @change-horizontal="changeHorizontal" @change-vertical="changeVertical" />
     </v-container>

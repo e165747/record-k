@@ -27,7 +27,7 @@ class RecordController extends Controller
     // 画像のフルURLを生成
     foreach ($records as $record) {
       if ($record->image_path) {
-        $record->image_path = asset('storage/jacket/' . $userId . '/' . $record->image_path);
+        $record->image_path = asset('storage/jacket/' . $userId . '/' . $record->record_id . '/' . $record->image_path);
       }
     }
     return response()->json($records);
@@ -42,20 +42,21 @@ class RecordController extends Controller
   public function store(RecordRequest $request)
   {
     // リクエストデータを取得
-    $recordData = $request->except('jacket_img');
+    $recordData = $request->except(['jacket_img', 'image_path']);
+    // レコードを作成
+    $newData = Record::create($recordData);
 
     // 画像ファイルがアップロードされているか確認
     if ($request->hasFile('jacket_img')) {
       $file = $request->file('jacket_img');
-      $path = 'public/jacket' . '/' . Auth::id();
+      $path = 'public/jacket' . '/' . Auth::id() . '/' . $newData->id;
       // ファイルを保存し、パスを取得
       $filePath = $file->store($path);
       // ファイル名のみをレコードデータに追加
       $recordData['image_path'] = basename($filePath);
+      $newData->update($recordData);
     }
-
-    // レコードを作成
-    Record::create($recordData);
+    return response()->json($newData);
   }
 
   /**
@@ -113,7 +114,7 @@ class RecordController extends Controller
     // 画像ファイルがアップロードされているか確認
     if ($request->hasFile('jacket_img')) {
       $file = $request->file('jacket_img');
-      $path = 'public/jacket' . '/' . Auth::id();
+      $path = 'public/jacket' . '/' . Auth::id() . '/' . $id;
       // ファイルを保存し、パスを取得
       $filePath = $file->store($path);
       // ファイル名のみをレコードデータに追加

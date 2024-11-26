@@ -20,8 +20,8 @@ const { dialog: deleteDialog, openDialog: openDelete } = useDialog()
 const { dialog: detailDialog, openDialog: openDetail } = useDialog()
 
 // 更新する
-const handleRatingChange = (artist: Artist, newRating: number) => {
-  const newArtist = { ...artist, evaluation: newRating }
+const handleRatingChange = async (artist: Artist, newRating: number) => {
+  const newArtist = { ...artist, selfEvaluation: newRating }
   emits('update', newArtist)
 }
 
@@ -37,9 +37,11 @@ const handleRatingChange = (artist: Artist, newRating: number) => {
           <div class="h-100 px-2 d-flex flex-column align-start">
             <!-- レコード名 -->
             {{ artist.authorName }}
+            <div class="text-muted">
+              {{ artist.knowDate }}
+            </div>
             <!-- 説明 -->
             <div class="text-muted">
-              {{ constant.AUTHOR_LIST[artist.authorId] }}
               {{ artist.description }}
             </div>
           </div>

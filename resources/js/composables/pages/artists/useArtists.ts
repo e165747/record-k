@@ -17,7 +17,6 @@ export const useArtists = () => {
     description: '',
     knowDate: '',
     memo: '',
-    purchaseDate: '',
   })
 
   const mounted = async () => {
@@ -26,13 +25,14 @@ export const useArtists = () => {
 
   const getAllArtist = async () => {
     const response = await axios.get(urls.index)
-    artists.value = response.data.map((artist: any) => ({
-      authorId: artist.author_id,
-      name: artist.author_name,
-      authorImage: artist.author_image ?? 'https://placehold.jp/150x150.png',
-      selfEvaluation: parseFloat(artist.self_evaluation),
-      description: artist.description,
-      memo: artist.memo,
+    artists.value = response.data.map((ats: any) => ({
+      authorId: ats.author_id,
+      authorName: ats.author_name,
+      authorImage: ats.author_image ?? 'https://placehold.jp/150x150.png',
+      selfEvaluation: parseFloat(ats.self_evaluation),
+      description: ats.description,
+      memo: ats.memo,
+      knowDate: ats.know_date,
     }));
   }
 
@@ -44,9 +44,10 @@ export const useArtists = () => {
       self_evaluation: artist.selfEvaluation,
       memo: artist.memo,
     })
+    getAllArtist()
   }
 
-  const store = async (artist: Artist) => {
+  const store = async (artist: Artist, authorImg: File | null) => {
     await axios.post(urls.store, {
       author_name: artist.authorName,
       description: artist.description,
@@ -54,9 +55,27 @@ export const useArtists = () => {
       memo: artist.memo,
     })
   }
+  /**
+   * 受け取ったArtistをフォームデータに変換して登録
+   * 
+   * @param {Artist} artist
+   * @param {File | null} authorImg
+   */
+  const storeForm = async (artist: Artist, authorImg: File | null) => {
+    const formData = new FormData()
+    formData.append('author_name', artist.authorName)
+    formData.append('description', artist.description)
+    formData.append('self_evaluation', artist.selfEvaluation.toString())
+    formData.append('memo', artist.memo)
+    if (authorImg) {
+      formData.append('author_image', authorImg)
+    }
+    await axios.post(urls.store, formData)
+  }
 
   const deleteRecord = async (record: Artist) => {
     await axios.delete(urls.delete(record.authorId))
+    getAllArtist()
   }
 
   const getDetail = async (id: number) => {
@@ -70,6 +89,7 @@ export const useArtists = () => {
     getAllArtist,
     update,
     store,
+    storeForm,
     deleteRecord,
   }
 }

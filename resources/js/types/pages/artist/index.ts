@@ -9,7 +9,6 @@ export type Artist = {
   description: string;
   knowDate: string;
   memo: string;
-  purchaseDate: string;
 }
 
 export interface Constant {

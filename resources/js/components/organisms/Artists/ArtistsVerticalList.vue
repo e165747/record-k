@@ -5,9 +5,8 @@ import Delete from '@/components/atoms/buttons/Delete.vue';
 import Detail from '@/components/atoms/buttons/Detail.vue';
 import Caution from '../modal/share/Caution.vue';
 import { Artist } from '@/types/pages/artist';
-import { constant } from '@/store/home/constant';
 import { useDialog } from '@/composables/pages/share/useDialog';
-// import EditArtistModal from '../modal/EditArtistModal.vue';
+import EditArtistModal from '@/components/organisms/modal/artists/EditArtistModal.vue';
 import { useArtists } from '@/composables/pages/artists/useArtists';
 
 const { detailData } = useArtists()
@@ -63,14 +62,13 @@ const handleRatingChange = async (artist: Artist, newRating: number) => {
       </v-col>
     </v-row>
     <v-dialog key="detail" v-model="detailDialog">
-      <!-- <EditArtistModal
+      <EditArtistModal
         :data="detailData"
         @after-store="() => {
-          detailDialog = false
           emits('reload')
         }"
         @close="detailDialog = false"
-      /> -->
+      />
     </v-dialog>
     <v-dialog key="delete" v-model="deleteDialog">
       <Caution

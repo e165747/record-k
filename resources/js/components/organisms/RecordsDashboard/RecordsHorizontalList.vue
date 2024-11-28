@@ -12,7 +12,7 @@ import { constant } from '@/store/home/constant';
 const props = defineProps<{
   records: Record[]
 }>()
-const { dialog, openDialog } = useDialog()
+const { dialog } = useDialog()
 const { dialog: detailDialog, openDialog: openDetail } = useDialog()
 const detailData = ref<Record>({
   id: 0,
@@ -28,6 +28,10 @@ const detailData = ref<Record>({
 
 const emits = defineEmits(['delete', 'reload'])
 
+const setDataAndOpenDialog = (record: Record) => {
+  detailData.value = record
+  openDetail()
+}
 
 </script>
 <template>
@@ -44,12 +48,10 @@ const emits = defineEmits(['delete', 'reload'])
               </div>
               <div>
                 <Detail :size="25" @detail="() => {
-                  detailData = record
-                  openDetail()
+                  setDataAndOpenDialog(record)
                 }" />
                 <Delete size=25 @delete="() => {
-                  detailData = record
-                  openDialog()
+                  setDataAndOpenDialog(record)
                 }" />
               </div>
             </v-row>
@@ -61,7 +63,6 @@ const emits = defineEmits(['delete', 'reload'])
       <EditRecordModal
         :data="detailData"
         @after-store="() => {
-          detailDialog = false
           emits('reload')
         }"
         @close="detailDialog = false"

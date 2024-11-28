@@ -4,6 +4,7 @@ import RatingStar from '@/components/molecules/RatingStar.vue';
 import Delete from '@/components/atoms/buttons/Delete.vue';
 import Detail from '@/components/atoms/buttons/Detail.vue';
 import Caution from '../modal/share/Caution.vue';
+import EditArtistModal from '@/components/organisms/modal/artists/EditArtistModal.vue';
 import { useDialog } from '@/composables/pages/share/useDialog';
 import { Artist } from '@/types/pages/artist';
 import { useArtists } from '@/composables/pages/artists/useArtists';
@@ -46,14 +47,13 @@ const emits = defineEmits(['delete', 'reload'])
       </v-col>
     </v-row>
     <v-dialog key="detail" v-model="detailDialog">
-      <!-- <EditRecordModal
+      <EditArtistModal
         :data="detailData"
         @after-store="() => {
-          detailDialog = false
           emits('reload')
         }"
         @close="detailDialog = false"
-      /> -->
+      />
     </v-dialog>
     <v-dialog v-model="dialog">
       <Caution

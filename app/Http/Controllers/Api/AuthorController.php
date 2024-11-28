@@ -45,7 +45,7 @@ class AuthorController extends Controller
     // 画像ファイルがアップロードされているか確認
     if ($request->hasFile('author_image')) {
       $file = $request->file('author_image');
-      $path = 'public/artist' . '/' . Auth::id() . '/' . $newData->author_id;
+      $path = $this->getFilePath($newData->author_id, Auth::id());
       // ファイルを保存し、パスを取得
       $filePath = $file->store($path);
       // ファイル名のみをレコードデータに追加
@@ -98,5 +98,45 @@ class AuthorController extends Controller
     $userId = Auth::id();
     $authors = Author::where('user_id', $userId)->pluck('author_name', 'author_id');
     return response()->json($authors);
+  }
+
+  /**
+   * レコードの画像を保存または更新
+   * 
+   * @param Request $request
+   * @param int $id
+   * 
+   * @return \Illuminate\Http\Response
+   */
+  public function upsertImage(Request $request, $id)
+  {
+    // リクエストデータを取得
+    $requestData = $request->all();
+    // 画像ファイルがアップロードされているか確認
+    if ($request->hasFile('author_img')) {
+      $file = $request->file('author_img');
+      $path = $this->getFilePath($id, Auth::id());
+      // ファイルを保存し、パスを取得
+      $filePath = $file->store($path);
+      // ファイル名のみをレコードデータに追加
+      $requestData['author_image'] = basename($filePath);
+    }
+    // アーティストを更新
+    $data = Author::find($id);
+    $data->author_image = $requestData['author_image'];
+    $data->save();
+
+    return response()->json($data);
+  }
+
+  /**
+   * ファイルパスを取得する
+   * 
+   * @param int $id
+   * @param int $userId
+   */
+  protected function getFilePath($id, $userId)
+  {
+    return 'public/artist' . '/' . $userId . '/' . $id;
   }
 }

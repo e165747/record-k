@@ -100,6 +100,7 @@ const save = async () => {
       memo: record.value.memo,
     })
     record.value = initialRecord;
+    emit('close');
     emit('after-store');
   } catch (e: any) {
     error.value.name = e.response.data.errors['record_name'];
@@ -133,11 +134,12 @@ const uploadImage = async () => {
     formData.append('jacket_img', jacketImg.value);
   }
 
-  await axios.post(urls.upsertImage(record.value.id), formData);
+  const response = await axios.post(urls.upsertImage(record.value.id), formData);
   // ファイル名を取得
-  const fileName = jacketImg.value?.name;
+  const fileName = response.data.image_path;
   if (fileName) {
     record.value.imagePath = fileName
+    emit('after-store');
   }
 }
 </script>

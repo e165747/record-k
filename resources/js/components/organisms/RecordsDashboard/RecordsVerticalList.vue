@@ -23,6 +23,11 @@ const handleRatingChange = (record: Record, newRating: number) => {
   emits('update', newRecord)
 }
 
+const setDataAndOpenDialog = (record: Record) => {
+  detailData.value = record
+  openDetail()
+}
+
 const detailData = ref<Record>({
   id: 0,
   name: '',
@@ -59,12 +64,10 @@ const detailData = ref<Record>({
           </div>
           <v-card-actions>
             <Detail @detail="() => {
-              detailData = record
-              openDetail()
+              setDataAndOpenDialog(record)
             }" />
             <Delete @delete="() => {
-              detailData = record
-              openDelete()
+              setDataAndOpenDialog(record)
             }" />
           </v-card-actions>
         </v-card>
@@ -74,7 +77,6 @@ const detailData = ref<Record>({
       <EditRecordModal
         :data="detailData"
         @after-store="() => {
-          detailDialog = false
           emits('reload')
         }"
         @close="detailDialog = false"

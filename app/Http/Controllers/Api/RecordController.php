@@ -121,7 +121,10 @@ class RecordController extends Controller
       $recordData['image_path'] = basename($filePath);
     }
     // レコードを更新
-    $newData = Record::find($id)->update($recordData);
-    return response()->json($newData);
+    $data = Record::find($id);
+    $data->image_path = $recordData['image_path'];
+    $data->save();
+
+    return response()->json($data);
   }
 }

@@ -36,15 +36,19 @@ export const useArtists = () => {
     }));
   }
 
-  // レコードの更新処理
-  const update = async (artist: Artist) => {
+  // アーティストの更新処理
+  const update = async (artist: Artist, callback?: () => void) => {
     await axios.put(urls.update(artist.authorId), {
       author_name: artist.authorName,
       description: artist.description,
       self_evaluation: artist.selfEvaluation,
       memo: artist.memo,
     })
-    getAllArtist()
+    if (callback) {
+      callback()
+    } else {
+      getAllArtist()
+    }
   }
 
   const store = async (artist: Artist, authorImg: File | null) => {
@@ -82,6 +86,20 @@ export const useArtists = () => {
     await axios.get(urls.getDetail(id))
   }
 
+  const uploadImage = async (artist: Artist, img: File | null, callback?: (url: string) => void) => {
+    const formData = new FormData();
+    if (img) {
+      formData.append('author_img', img);
+    }
+
+    const response = await axios.post(urls.upsertImage(artist.authorId), formData);
+    // ファイル名を取得
+    const fileName = response.data.author_image;
+    if (fileName && callback) {
+      callback(fileName);
+    }
+  }
+
   return {
     artists,
     detailData,
@@ -91,5 +109,6 @@ export const useArtists = () => {
     store,
     storeForm,
     deleteRecord,
+    uploadImage
   }
 }

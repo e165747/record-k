@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AuthorRequest;
 use App\Models\Author;
+use App\Models\Record;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class AuthorController extends Controller
 {
@@ -87,7 +89,16 @@ class AuthorController extends Controller
    */
   public function destroy($id)
   {
-    //
+    $author = Author::find($id);
+    $imagePath = 'public/artist/' . Auth::id() . '/' . $id . '/' . $author->author_image;
+    $author->delete();
+    // 画像ファイルが存在する場合は削除
+    if ($author->author_image && Storage::exists($imagePath)) {
+      Storage::delete($imagePath);
+    }
+    // アーティストに紐づくレコードも削除
+    Record::where('author_id', $id)->delete();
+    return response()->json($author);
   }
 
   /**
@@ -123,9 +134,17 @@ class AuthorController extends Controller
     }
     // アーティストを更新
     $data = Author::find($id);
+    $prevImage = $data->author_image;
     $data->author_image = $requestData['author_image'];
     $data->save();
 
+    if ($prevImage && $prevImage !== $data->author_image) {
+      $imagePath = 'public/artist/' . Auth::id() . '/' . $id . '/' . $prevImage;
+      // 画像ファイルが存在する場合は削除
+      if (Storage::exists($imagePath)) {
+        Storage::delete($imagePath);
+      }
+    }
     return response()->json($data);
   }
 

@@ -9,7 +9,7 @@ import { useDialog } from '@/composables/pages/share/useDialog';
 import EditArtistModal from '@/components/organisms/modal/artists/EditArtistModal.vue';
 import { useArtists } from '@/composables/pages/artists/useArtists';
 
-const { detailData } = useArtists()
+const { detailData, recordData, getRecordsByAuthorId } = useArtists()
 
 const props = defineProps<{
   artists: Artist[]
@@ -53,8 +53,9 @@ const handleRatingChange = async (artist: Artist, newRating: number) => {
               detailData = artist
               openDetail()
             }" />
-            <Delete @delete="() => {
+            <Delete @delete="async () => {
               detailData = artist
+              await getRecordsByAuthorId(artist.authorId)
               openDelete()
             }" />
           </v-card-actions>
@@ -80,11 +81,14 @@ const handleRatingChange = async (artist: Artist, newRating: number) => {
       <template #content>
         <div>アーティスト名</div>
         <h3>{{ detailData.authorName }}</h3>
+        <img style="height:150px; width:150px" :src="detailData.authorImage" />
         <div>詳細</div>
         <h3>{{ detailData.description }}</h3>
-        <img :src="detailData.authorImage" />
-        <!-- TODO 紐づくレコードを全て表示させる -->
+        <!-- 紐づくレコードを全て表示させる -->
          <h4>以下の作品も全て削除されます。</h4>
+         <div v-for="record in recordData" :key="record.id">
+           <div>{{ record.name }}</div>
+         </div>
       </template>
     </Caution>
     </v-dialog>

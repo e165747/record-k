@@ -12,7 +12,7 @@ import { constant } from '@/store/home/constant';
 const props = defineProps<{
   records: Record[]
 }>()
-const { dialog } = useDialog()
+const { dialog, openDialog } = useDialog()
 const { dialog: detailDialog, openDialog: openDetail } = useDialog()
 const detailData = ref<Record>({
   id: 0,
@@ -28,9 +28,8 @@ const detailData = ref<Record>({
 
 const emits = defineEmits(['delete', 'reload'])
 
-const setDataAndOpenDialog = (record: Record) => {
+const setData = (record: Record) => {
   detailData.value = record
-  openDetail()
 }
 
 </script>
@@ -48,10 +47,12 @@ const setDataAndOpenDialog = (record: Record) => {
               </div>
               <div>
                 <Detail :size="25" @detail="() => {
-                  setDataAndOpenDialog(record)
+                  setData(record)
+                  openDetail()
                 }" />
                 <Delete size=25 @delete="() => {
-                  setDataAndOpenDialog(record)
+                  setData(record)
+                  openDialog()
                 }" />
               </div>
             </v-row>
@@ -79,6 +80,7 @@ const setDataAndOpenDialog = (record: Record) => {
       <template #content>
         <div>レコード名</div>
         <h3>{{ detailData.name }}</h3>
+        <img style="height:150px; width:150px" :src="detailData.imagePath" />
         <div>アーティスト</div>
         <h3>{{ detailData.authorId !== undefined ? constant.AUTHOR_LIST[detailData.authorId] : '' }}</h3>
         <div>詳細</div>

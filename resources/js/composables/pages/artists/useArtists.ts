@@ -2,6 +2,7 @@ import { Ref, ref } from 'vue'
 import axios from 'axios'
 import { urls } from './constant'
 import { Artist } from '@/types/pages/artist'
+import { Record } from '@/types/pages/home'
 
 
 export const useArtists = () => {
@@ -18,6 +19,8 @@ export const useArtists = () => {
     knowDate: '',
     memo: '',
   })
+
+  const recordData = ref<Record[]>([])
 
   const mounted = async () => {
     getAllArtist()
@@ -100,8 +103,22 @@ export const useArtists = () => {
     }
   }
 
+  const getRecordsByAuthorId = async (id: number) => {
+    const response = await axios.get(urls.getRecordsByAuthorId(id))
+    recordData.value = response.data.map((record: any) => ({
+      id: record.record_id,
+      name: record.record_name,
+      imagePath: record.record_image,
+      description: record.description,
+      evaluation: record.self_evaluation,
+      authorId: record.author_id,
+      memo: record.memo,
+    }))
+  }
+
   return {
     artists,
+    recordData,
     detailData,
     mounted,
     getAllArtist,
@@ -109,6 +126,7 @@ export const useArtists = () => {
     store,
     storeForm,
     deleteRecord,
-    uploadImage
+    uploadImage,
+    getRecordsByAuthorId,
   }
 }

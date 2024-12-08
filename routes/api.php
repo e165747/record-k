@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group(['middleware' => ['auth:sanctum']], function () {
   Route::get('/me', MeController::class);
   Route::post('/records/{record}/upsert-image', [RecordController::class, 'upsertImage']);
+  Route::get('/records/get-records-by-author/{author}', [RecordController::class, 'getRecordsByAuthor']);
   Route::apiResource('/records', RecordController::class);
   Route::get('/authors/get-authors', [AuthorController::class, 'list']);
   Route::post('/authors/{author}/upsert-image', [AuthorController::class, 'upsertImage']);

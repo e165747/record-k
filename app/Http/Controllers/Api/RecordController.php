@@ -7,6 +7,7 @@ use App\Http\Requests\RecordRequest;
 use App\Models\Record;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class RecordController extends Controller
 {
@@ -122,9 +123,28 @@ class RecordController extends Controller
     }
     // レコードを更新
     $data = Record::find($id);
+    $prevImage = $data->image_path;
     $data->image_path = $recordData['image_path'];
     $data->save();
 
+    // 以前の画像ファイルが存在する場合は削除
+    if ($prevImage && $prevImage !== $data->image_path) {
+      $imagePath = 'public/jacket/' . Auth::id() . '/' . $id . '/' . $prevImage;
+      if (Storage::exists($imagePath)) {
+        Storage::delete($imagePath);
+      }
+    }
     return response()->json($data);
+  }
+
+  /**
+   * Author Idに紐づくレコードを取得
+   * @param int $authorId
+   * @return \Illuminate\Http\Response
+   */
+  public function getRecordsByAuthor($authorId)
+  {
+    $records = Record::where('author_id', $authorId)->get()->toArray();
+    return response()->json($records);
   }
 }

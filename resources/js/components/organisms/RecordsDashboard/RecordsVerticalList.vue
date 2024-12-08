@@ -23,9 +23,8 @@ const handleRatingChange = (record: Record, newRating: number) => {
   emits('update', newRecord)
 }
 
-const setDataAndOpenDialog = (record: Record) => {
+const setData = (record: Record) => {
   detailData.value = record
-  openDetail()
 }
 
 const detailData = ref<Record>({
@@ -64,10 +63,12 @@ const detailData = ref<Record>({
           </div>
           <v-card-actions>
             <Detail @detail="() => {
-              setDataAndOpenDialog(record)
+              setData(record)
+              openDetail()
             }" />
             <Delete @delete="() => {
-              setDataAndOpenDialog(record)
+              setData(record)
+              openDelete()
             }" />
           </v-card-actions>
         </v-card>
@@ -92,6 +93,7 @@ const detailData = ref<Record>({
       <template #content>
         <div>レコード名</div>
         <h3>{{ detailData.name }}</h3>
+        <img style="height:150px; width:150px" :src="detailData.imagePath" />
         <div>アーティスト</div>
         <h3>{{ detailData.authorId !== undefined ? constant.AUTHOR_LIST[detailData.authorId] : '' }}</h3>
         <div>詳細</div>

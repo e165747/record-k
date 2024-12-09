@@ -14,7 +14,7 @@ const props = defineProps<{
   artists: Artist[]
 }>()
 const { dialog, openDialog } = useDialog()
-const { dialog: detailDialog, openDialog: openDetail } = useDialog()
+const { dialog: detailDialog, openDialog: openDetail, closeDialog: closeDetail } = useDialog()
 
 const emits = defineEmits(['delete', 'reload'])
 
@@ -51,6 +51,7 @@ const emits = defineEmits(['delete', 'reload'])
       <EditArtistModal
         :data="detailData"
         @after-store="() => {
+          closeDetail()
           emits('reload')
         }"
         @close="detailDialog = false"

@@ -16,7 +16,7 @@ const props = defineProps<{
 }>()
 const emits = defineEmits(['update', 'delete', 'reload'])
 const { dialog: deleteDialog, openDialog: openDelete } = useDialog()
-const { dialog: detailDialog, openDialog: openDetail } = useDialog()
+const { dialog: detailDialog, openDialog: openDetail, closeDialog: closeDetail } = useDialog()
 
 // 更新する
 const handleRatingChange = async (artist: Artist, newRating: number) => {
@@ -66,6 +66,7 @@ const handleRatingChange = async (artist: Artist, newRating: number) => {
       <EditArtistModal
         :data="detailData"
         @after-store="() => {
+          closeDetail()
           emits('reload')
         }"
         @close="detailDialog = false"

@@ -8,6 +8,7 @@ use App\Models\Author;
 use App\Models\Record;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class AuthorController extends Controller
@@ -20,13 +21,17 @@ class AuthorController extends Controller
   public function index()
   {
     $userId = Auth::id();
-    $authors = Author::where('user_id', $userId)->get();
-    // 画像のフルURLを生成
-    foreach ($authors as $author) {
-      if ($author->author_image) {
-        $author->author_image = asset('storage/artist/' . $userId . '/' . $author->author_id . '/' . $author->author_image);
+    $cacheKey = 'authors_' . $userId;
+    $authors = Cache::remember($cacheKey, 60 * 60, function () use ($userId) {
+      $authors = Author::where('user_id', $userId)->get();
+      // 画像のフルURLを生成
+      foreach ($authors as $author) {
+        if ($author->author_image) {
+          $author->author_image = asset('storage/artist/' . $userId . '/' . $author->author_id . '/' . $author->author_image);
+        }
       }
-    }
+      return $authors;
+    });
     return response()->json($authors);
   }
 
@@ -54,6 +59,7 @@ class AuthorController extends Controller
       $recordData['author_image'] = basename($filePath);
       $newData->update($recordData);
     }
+    $this->forgetCache();
     return response()->json($newData);
   }
 
@@ -78,6 +84,7 @@ class AuthorController extends Controller
   public function update(Request $request, $id)
   {
     $author = Author::find($id)->update($request->all());
+    $this->forgetCache();
     return response()->json($author);
   }
 
@@ -98,6 +105,7 @@ class AuthorController extends Controller
     }
     // アーティストに紐づくレコードも削除
     Record::where('author_id', $id)->delete();
+    $this->forgetCache();
     return response()->json($author);
   }
 
@@ -145,6 +153,7 @@ class AuthorController extends Controller
         Storage::delete($imagePath);
       }
     }
+    $this->forgetCache();
     return response()->json($data);
   }
 
@@ -154,8 +163,22 @@ class AuthorController extends Controller
    * @param int $id
    * @param int $userId
    */
-  protected function getFilePath($id, $userId)
+  private function getFilePath($id, $userId)
   {
     return 'public/artist' . '/' . $userId . '/' . $id;
+  }
+
+  /**
+   * キャッシュを削除する内部メソッド　
+   * 
+   * @return void
+   */
+  private function forgetCache()
+  {
+    $userId = Auth::id();
+    $cacheKey = 'authors_' . $userId;
+    if (Cache::has($cacheKey)) {
+      Cache::forget($cacheKey);
+    }
   }
 }

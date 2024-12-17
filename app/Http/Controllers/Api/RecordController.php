@@ -7,6 +7,7 @@ use App\Http\Requests\RecordRequest;
 use App\Models\Record;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class RecordController extends Controller
@@ -24,13 +25,19 @@ class RecordController extends Controller
   {
     // recordsテーブルのデータを全件取得
     $userId = Auth::id();
-    $records = Record::where('user_id', $userId)->get();
-    // 画像のフルURLを生成
-    foreach ($records as $record) {
-      if ($record->image_path) {
-        $record->image_path = asset('storage/jacket/' . $userId . '/' . $record->record_id . '/' . $record->image_path);
+    $cacheKey = 'records_' . $userId;
+
+    // キャッシュが存在する場合はキャッシュを返す
+    $records = Cache::remember($cacheKey, 60 * 60, function () use ($userId) {
+      $records = Record::where('user_id', $userId)->get();
+      // 画像のフルURLを生成
+      foreach ($records as $record) {
+        if ($record->image_path) {
+          $record->image_path = asset('storage/jacket/' . $userId . '/' . $record->record_id . '/' . $record->image_path);
+        }
       }
-    }
+      return $records;
+    });
     return response()->json($records);
   }
 
@@ -57,6 +64,8 @@ class RecordController extends Controller
       $recordData['image_path'] = basename($filePath);
       $newData->update($recordData);
     }
+    // キャッシュを削除
+    $this->forgetCache();
     return response()->json($newData);
   }
 
@@ -85,6 +94,7 @@ class RecordController extends Controller
     // レコードを更新
     $newData = Record::find($id)->update($recordData);
 
+    $this->forgetCache();
     return response()->json($newData);
   }
 
@@ -97,6 +107,8 @@ class RecordController extends Controller
   public function destroy($id)
   {
     Record::destroy($id);
+    // キャッシュを削除
+    $this->forgetCache();
     return response()->json(['message' => 'Deleted successfully']);
   }
 
@@ -134,6 +146,8 @@ class RecordController extends Controller
         Storage::delete($imagePath);
       }
     }
+    // キャッシュを削除
+    $this->forgetCache();
     return response()->json($data);
   }
 
@@ -146,5 +160,15 @@ class RecordController extends Controller
   {
     $records = Record::where('author_id', $authorId)->get()->toArray();
     return response()->json($records);
+  }
+
+  /**
+   * レコードのキャッシュを削除する内部メソッド　
+   * 
+   * @return void
+   */
+  private function forgetCache()
+  {
+    Cache::forget('records_' . Auth::id());
   }
 }

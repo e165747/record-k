@@ -7,6 +7,7 @@ use App\Repositories\AuthorRepositoryInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\URL;
 
 class AuthorRepository implements AuthorRepositoryInterface
 {
@@ -19,7 +20,7 @@ class AuthorRepository implements AuthorRepositoryInterface
       // 画像のフルURLを生成
       foreach ($authors as $author) {
         if ($author->author_image) {
-          $author->author_image = asset('storage/artist/' . $userId . '/' . $author->author_id . '/' . $author->author_image);
+          $author->author_image = URL::asset('storage/artist/' . $userId . '/' . $author->author_id . '/' . $author->author_image);
         }
       }
       return $authors;

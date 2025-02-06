@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\URL;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 
-// 今は使っていない
 class AuthorRepositoryTest extends TestCase
 {
   protected function setUp(): void
@@ -115,6 +114,66 @@ class AuthorRepositoryTest extends TestCase
     $this->assertEquals('http://localhost/storage/artist/1/1/image1.jpg', $result[0]->author_image);
     $this->assertEquals('http://localhost/storage/artist/1/2/image2.jpg', $result[1]->author_image);
   }
+
+  /**
+   * 値が空っぽの場合の一覧取得
+   * @test
+   * @group author
+   * @return void
+   */
+  public function indexEmpty()
+  {
+    $userId = 1;
+    $authors = collect([]);
+
+    // Authファサードのモック
+    Auth::shouldReceive('id')->once()->andReturn($userId);
+
+    // Cacheファサードのモック
+    Cache::shouldReceive('remember')->once()->andReturn($authors);
+
+    // Authorモデルのモック
+    $authorMock = Mockery::mock('overload:' . Author::class);
+    $authorMock->shouldReceive('where')->with('user_id', $userId)->andReturnSelf();
+    $authorMock->shouldReceive('get')->andReturn($authors);
+
+    // asset関数のモック
+    $this->mockAssetFunction();
+
+    // リポジトリのインスタンス化とメソッドの呼び出し
+    $repository = new AuthorRepository();
+    $result = $repository->index();
+
+    // アサーション
+    $this->assertCount(0, $result);
+  }
+
+  /**
+   * getByIdのテスト
+   * Eloquentが入るメソッドはモック化するのが難しい＋モック化する意味が薄いため省略
+   * 
+   * @test
+   * @group author
+   * @return void
+   */
+  // public function getById()
+  // {
+  //   $authorId = 99;
+  //   $author = Author::factory()->make(['author_id' => $authorId]);
+
+  //   // Authorモデルのモック
+  //   $authorMock = Mockery::mock('overload:' . Author::class);
+  //   $authorMock->shouldReceive('find')->with($authorId)->andReturn($author);
+  //   // $authorMock = Mockery::mock('alias:' . Author::class);
+  //   // $authorMock->shouldReceive('find')->with($authorId)->andReturn($author);
+
+  //   // リポジトリのインスタンス化とメソッドの呼び出し
+  //   $repository = new AuthorRepository();
+  //   $result = $repository->getById($authorId);
+
+  //   // アサーション
+  //   $this->assertEquals($author, $result);
+  // }
 
   private function mockAssetFunction()
   {

@@ -10,26 +10,27 @@
       flat
     >
       <v-card-title class="text-h6 font-weight-regular">
-        Sign in
-      </v-card-title>
-      <v-spacer></v-spacer>
-      <v-btn
-        @click="clickSignup"
-      >
         Sign up
+      </v-card-title>
+        <v-spacer></v-spacer>
+      <v-btn
+      icon
+        @click="back"
+      >
+        <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
     </v-toolbar>  
     <v-form
       ref="form"
       v-model="isValid"
       class="pa-4 pt-6"
-      @submit.prevent="login"
+      @submit.prevent="signup"
     >
       <v-alert v-if="error" title="Error" type="error" prominent dismissible  @click.native="error = false" icon="mdi-alert-octagon">
         {{ errorMessage }}
       </v-alert>
       <v-text-field
-        v-model="username"
+        v-model="formValues.username"
         :rules="[rules.email]"
         color="gray"
         label="User name(email)"
@@ -37,41 +38,45 @@
         variant="filled"
       />
       <v-text-field
-        v-model="password"
+        v-model="formValues.password"
         :rules="[rules.length(6)]"
         color="gray"
+        max="100"
         label="Password"
+        type="password"
+        variant="filled"
+      />
+      <v-text-field
+        v-model="formValues.passwordConfirmation"
+        :rules="[rules.passwordConfirmation]"
+        color="gray"
+        max="100"
+        label="Password Confirmation"
         type="password"
         variant="filled"
       />
       <v-card-actions>
         <v-btn @click="clear">Clear</v-btn>
         <v-spacer></v-spacer>
-        <v-btn color="primary" :disabled="!isValid" type="submit">Login</v-btn>
+        <v-btn color="primary" :disabled="!isValid" type="submit">Sign up</v-btn>
       </v-card-actions>
       </v-form>
   </v-card>
 </template>
 
 <script setup lang="ts">
-import { useLogin } from '@/composables/pages/login/useLogin'
-import { onMounted } from 'vue'
+import { useSignup } from '@/composables/pages/signup/useSignup'
 
 const {
   form,
-  username,
-  password,
+  formValues,
   error,
   errorMessage,
-  login,
+  signup,
   isValid,
-  mounted,
   rules,
   clear,
-  clickSignup
-} = useLogin()
+  back
+} = useSignup()
 
-onMounted(() => {
-  mounted()
-})
 </script>

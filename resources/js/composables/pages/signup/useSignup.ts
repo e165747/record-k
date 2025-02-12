@@ -2,10 +2,13 @@ import axios from "axios"
 import { Ref, ref } from "vue"
 import { useRouter } from 'vue-router'
 
-export const useLogin = () => {
+export const useSignup = () => {
   const form = ref(null)
-  const username: Ref<string> = ref("")
-  const password: Ref<string> = ref("")
+  const formValues = ref({
+    username: "",
+    password: "",
+    passwordConfirmation: "",
+  })
   const error: Ref<boolean> = ref(false)
   const errorMessage: Ref<string> = ref("")
   // バリデーションの結果が通ったか判定
@@ -14,6 +17,7 @@ export const useLogin = () => {
     email: (v: string) => boolean | string
     length: (len: number) => (v: string) => boolean | string
     // password: (v: string) => boolean | string
+    passwordConfirmation: (v: string) => boolean | string
     required: (v: string) => boolean | string
   }
   const rules: Ref<ValidationRules> = ref({
@@ -22,15 +26,17 @@ export const useLogin = () => {
     // パスワードルールは適当なのでとりあえずコメントアウト
     // password: v => !!(v || '').match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/) ||
     //   'Password must contain an upper case letter, a numeric character, and a special character',
+    // パスワード確認（パスワードと同じ値か確認する）
+    passwordConfirmation: (v: string) => v === formValues.value.password || 'Password confirmation does not match',
     required: v => !!v || 'This field is required',
   })
   const router = useRouter()
-  const login = async () => {
+  const signup = async () => {
     try {
       // ここにログイン処理を記述
       await axios.post("/login", {
-        email: username.value,
-        password: password.value,
+        email: formValues.value.username,
+        password: formValues.value.password,
       })
       // ログイン成功後にHome画面に遷移
       router.push('/')
@@ -40,45 +46,27 @@ export const useLogin = () => {
     }
   }
 
-  const mounted = async () => {
-    try {
-      const csrfResponse = await axios.get("/sanctum/csrf-cookie")
-      //ここでログイン済みか判定し，Homeに飛ばす
-      if (csrfResponse.status === 204) {
-        const userResponse = await axios.get("/api/me")
-        if (userResponse.data) {
-          username.value = userResponse.data.name
-          const currentRoute = router.currentRoute.value.path
-          if (currentRoute === '/login') {
-            router.push('/')
-          }
-        }
-      }
-    } catch (error: any) {
-      throw new Error(error.message)
+  const clear = () => {
+    formValues.value = {
+      username: "",
+      password: "",
+      passwordConfirmation: "",
     }
   }
 
-  const clear = () => {
-    username.value = ""
-    password.value = ""
-  }
-
-  const clickSignup = async () => {
-    router.push('/sign-up')
+  const back = () => {
+    router.back()
   }
 
   return {
     form,
-    username,
-    password,
+    formValues,
     error,
     errorMessage,
-    login,
+    signup,
     isValid,
     rules,
-    mounted,
     clear,
-    clickSignup
+    back,
   }
 }

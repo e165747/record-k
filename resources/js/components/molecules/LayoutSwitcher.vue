@@ -12,6 +12,7 @@
 const props = defineProps<{
   horizontal: boolean
 }>()
+const emits = defineEmits(['change-horizontal', 'change-vertical'])
 </script>
 <style scoped>
 .btn-group {

@@ -23,26 +23,41 @@ export const useSignup = () => {
   const rules: Ref<ValidationRules> = ref({
     email: v => !!(v || '').match(/@/) || 'Please enter a valid email',
     length: len => v => (v || '').length >= len || `Invalid character length, required ${len}`,
-    // パスワードルールは適当なのでとりあえずコメントアウト
-    // password: v => !!(v || '').match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/) ||
-    //   'Password must contain an upper case letter, a numeric character, and a special character',
     // パスワード確認（パスワードと同じ値か確認する）
     passwordConfirmation: (v: string) => v === formValues.value.password || 'Password confirmation does not match',
     required: v => !!v || 'This field is required',
   })
+
+  // 成功時のスナックバー表示
+  const snackbar = ref({
+    show: false,
+    text: "",
+  })
+
   const router = useRouter()
   const signup = async () => {
     try {
-      // ここにログイン処理を記述
-      await axios.post("/login", {
+      await axios.post("/api/signup", {
+        name: formValues.value.username,
         email: formValues.value.username,
         password: formValues.value.password,
+        password_confirmation: formValues.value.passwordConfirmation,
       })
-      // ログイン成功後にHome画面に遷移
-      router.push('/')
+      // サインアップ成功後にログイン画面に遷移
+      snackbar.value = {
+        show: true,
+        text: "Sign up successful. Redirecting to login screen.",
+      }
+      setTimeout(() => {
+        back()
+      }, 3000)
     } catch (e: any) {
       error.value = true
       errorMessage.value = e.response.data.error
+      snackbar.value = {
+        show: true,
+        text: "Sign up failed. Please try again.",
+      }
     }
   }
 
@@ -63,6 +78,7 @@ export const useSignup = () => {
     formValues,
     error,
     errorMessage,
+    snackbar,
     signup,
     isValid,
     rules,

@@ -61,10 +61,12 @@
         <v-btn color="primary" :disabled="!isValid" type="submit">Sign up</v-btn>
       </v-card-actions>
       </v-form>
+      <Snackbar :snackbar="snackbar.show" :text="snackbar.text" />
   </v-card>
 </template>
 
 <script setup lang="ts">
+import Snackbar from '@/components/molecules/Snackbar.vue';
 import { useSignup } from '@/composables/pages/signup/useSignup'
 
 const {
@@ -73,6 +75,7 @@ const {
   error,
   errorMessage,
   signup,
+  snackbar,
   isValid,
   rules,
   clear,

@@ -57,7 +57,7 @@ class RecordController extends Controller
     // 画像ファイルがアップロードされているか確認
     if ($request->hasFile('jacket_img')) {
       $file = $request->file('jacket_img');
-      $path = 'public/jacket' . '/' . Auth::id() . '/' . $newData->id;
+      $path = 'public/jacket' . '/' . Auth::id() . '/' . $newData->record_id;
       // ファイルを保存し、パスを取得
       $filePath = $file->store($path);
       // ファイル名のみをレコードデータに追加

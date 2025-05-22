@@ -15,3 +15,8 @@ export type Record = {
 export interface Constant {
   AUTHOR_LIST: { [key: number]: string };
 }
+
+export interface AiInputType {
+  prompt: string;
+  filePath: string;
+}

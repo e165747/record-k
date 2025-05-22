@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RecordRequest;
 use App\Models\Record;
+use App\Services\RecordService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -12,8 +13,10 @@ use Illuminate\Support\Facades\Storage;
 
 class RecordController extends Controller
 {
-  public function __construct()
+  private $service;
+  public function __construct(RecordService $service)
   {
+    $this->service = $service;
     $this->middleware('ensureUserOwnsRecord')->only(['show', 'update', 'destroy']);
   }
   /**
@@ -67,6 +70,26 @@ class RecordController extends Controller
     // キャッシュを削除
     $this->forgetCache();
     return response()->json($newData);
+  }
+
+  /**
+   * AIを利用してレコードを登録
+   * 
+   * @param \Illuminate\Http\Request $request
+   * @return \Illuminate\Http\Response
+   */
+  public function storeUseAi(Request $request)
+  {
+    // リクエストデータを取得
+    $recordData = $request->all();
+    // AIを利用してレコードを登録
+    $response = $this->service->sendMessageToAi($recordData);
+    // レコードを作成
+    // $newData = Record::create($aiResponse);
+
+    // キャッシュを削除
+    $this->forgetCache();
+    return response()->json([$response], 200);
   }
 
   /**

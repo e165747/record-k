@@ -6,4 +6,5 @@ export const urls = {
   getDetail: (id: number) => `/api/records/${id}`,
   getAuthors: '/api/authors/get-authors',
   upsertImage: (id: number) => `/api/records/${id}/upsert-image`,
+  inputAi: '/api/records/store-use-ai',
 }

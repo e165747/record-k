@@ -4,7 +4,7 @@ import { onMounted } from 'vue'
 import RecordsDashboardHorizontalList from '@/components/organisms/RecordsDashboard/RecordsHorizontalList.vue'
 import RecordsVerticalList from '@/components/organisms/RecordsDashboard/RecordsVerticalList.vue';
 import LayoutSwitcher from '@/components/molecules/LayoutSwitcher.vue';
-import AddRecordModal from '@/components/organisms/modal/AddRecordModal.vue';
+import AddRecordModal from '@/components/organisms/modal/record/AddRecordModal.vue';
 import { useLayoutSwitch } from '@/composables/pages/share/useLayoutSwitch';
 
 const { records, mounted, update, deleteRecord, getAllRecord } = useHomeParam()

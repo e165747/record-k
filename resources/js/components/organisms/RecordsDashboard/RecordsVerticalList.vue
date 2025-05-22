@@ -8,7 +8,7 @@ import Caution from '../modal/share/Caution.vue';
 import { Record } from '@/types/pages/home'
 import { constant } from '@/store/home/constant';
 import { useDialog } from '@/composables/pages/share/useDialog';
-import EditRecordModal from '../modal/EditRecordModal.vue';
+import EditRecordModal from '../modal/record/EditRecordModal.vue';
 
 const props = defineProps<{
   records: Record[]

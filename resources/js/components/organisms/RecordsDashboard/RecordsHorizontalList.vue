@@ -5,7 +5,7 @@ import RatingStar from '@/components/molecules/RatingStar.vue';
 import Delete from '@/components/atoms/buttons/Delete.vue';
 import Detail from '@/components/atoms/buttons/Detail.vue';
 import Caution from '../modal/share/Caution.vue';
-import EditRecordModal from '../modal/EditRecordModal.vue';
+import EditRecordModal from '../modal/record/EditRecordModal.vue';
 import { Record } from '@/types/pages/home'
 import { useDialog } from '@/composables/pages/share/useDialog';
 import { constant } from '@/store/home/constant';

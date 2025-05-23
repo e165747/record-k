@@ -1,4 +1,4 @@
-FROM php:8.4-fpm
+FROM php:8.1-fpm
 EXPOSE 5173
 RUN apt-get update \
   && apt-get install -y \
@@ -8,16 +8,20 @@ RUN apt-get update \
   vim \
   libfreetype6-dev \
   libjpeg62-turbo-dev \
-  libmcrypt-dev \
   libpng-dev \
   libfontconfig1 \
   libxrender1 \
-  default-mysql-client
+  default-mysql-client \
+  libzip-dev \
+  libxml2-dev \
+  zlib1g-dev
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 RUN docker-php-ext-install gd
 RUN docker-php-ext-install bcmath
 RUN docker-php-ext-install pdo_mysql mysqli exif
+RUN docker-php-ext-install zip
+
 RUN cd /usr/bin && curl -s http://getcomposer.org/installer | php && ln -s /usr/bin/composer.phar /usr/bin/composer
 
 ENV NODE_VERSION=16.14.0
